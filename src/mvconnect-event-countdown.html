@@ -1,0 +1,208 @@
+<script>
+	const counterDates = [
+		{
+			title		: "Spring 2025 Registration",
+			starts		: "10/31/2024",
+			button_text	: "Spring Course Offerings",
+			button_link	: "https://self-serv.morainevalley.edu/Student/Courses",
+			image		: "https://studentmorainevalley.sharepoint.com/sites/MVConnect/SiteAssets/SitePages/OrganizationHome(1)/D388CAM141.jpg"
+		},
+		{
+			title		: "Made up to check closest",
+			starts		: "12/24/2024",
+			button_text	: "Spring Course Offerings",
+			button_link	: "https://self-serv.morainevalley.edu/Student/Courses",
+			image		: "https://studentmorainevalley.sharepoint.com/sites/MVConnect/SiteAssets/SitePages/OrganizationHome(1)/D388CAM141.jpg"
+		},
+		{
+			title		: "Spring 2025 Registration",
+			starts		: "12/31/2024",
+			button_text	: "Spring Course Offerings",
+			button_link	: "https://self-serv.morainevalley.edu/Student/Courses",
+			image		: "https://studentmorainevalley.sharepoint.com/sites/MVConnect/SiteAssets/SitePages/OrganizationHome(1)/D388CAM141.jpg"
+		},
+		{
+			title		: "tada Spring 2025 Registration",
+			starts		: "10/24/2024",
+			button_text	: "Spring Course Offerings",
+			button_link	: "https://self-serv.morainevalley.edu/Student/Courses",
+			image		: "https://studentmorainevalley.sharepoint.com/sites/MVConnect/SiteAssets/SitePages/OrganizationHome(1)/D388CAM141.jpg"
+		}
+	];    
+</script>
+
+<!--#styles-->
+
+<style>
+	/** 
+	 * This is not a reusable component so its acceptable to do a one-to-one relationship with ids.
+	 */
+    #js-counter {
+        padding: 1.5rem;
+        background-image: url('https://studentmorainevalley.sharepoint.com/sites/MVConnect/SiteAssets/SitePages/OrganizationHome(1)/D388CAM141.jpg');
+        background-size: cover;
+        color: #fff;
+        text-align: center;
+    }
+
+	#js-counter_title {
+		display: block;
+		margin-bottom: 1rem;
+		font-size: 20px;
+		font-weight: 600;
+	}
+
+	#js-counter_days {
+		display: block;
+		font-size: 40px; 
+		font-weight: 600;
+	}
+
+	#js-counter_days_text {
+		display: block;		
+		margin-bottom: 1rem;
+
+		font-size: 12px;
+	}
+
+	#js-counter_button {
+		display: inline-block;
+		position: relative;
+		margin: 0;
+		padding-top: .375rem;
+		padding-bottom: .375rem;
+		padding-left: .75rem;
+		padding-right: .75rem;
+		border-radius: 4px;
+		border-width: 0px;
+		border-style: solid;
+		border-color: transparent;
+		color: #fff;
+		background-color: #1f5a40;
+		font-family: inherit;
+		font-size: inherit;
+		text-align: center;
+		text-decoration: none;
+		color: inherit;
+		cursor: pointer;
+		transition: .2s;		
+	}
+
+	#js-counter_button:hover {
+		background-color: #4c4c44;
+	}
+</style>
+
+<!--#content-->
+
+<div id="js-counter">
+    <span id="js-counter_title">
+        &nbsp;
+    </span>
+    <span id="js-counter_days">
+        &nbsp;
+    </span>
+    <span id="js-counter_days-text">
+        days
+    </span> 
+	<p>
+		<a id="js-counter_button" href="#">
+			Link
+		</a>        
+	</p>       
+</div>
+
+<!--#script-->
+
+<script>
+    /**
+     * Update the text and button of the counter.
+     */
+    function mvccCounterUpdate(_item)
+    {
+		
+		//
+		// Ensure we are using a button.
+		//
+		document.getElementById("js-counter").style = `background-image: url('${_item.image}')`;
+        //
+        // Title
+        //
+        document.getElementById("js-counter_title").innerHTML = _item.title;
+
+        //
+        // Days
+        //
+        document.getElementById("js-counter_days").innerHTML = mvccCounterGetDays(_item.starts);	
+        
+		//
+		// Ensure we are using a button.
+		//
+		if (_item.button_text != "" || _Item.button_link != "")
+		{
+			//
+			// Button Text
+			//
+			document.getElementById("js-counter_button").innerHTML = _item.button_text;		
+
+			//
+			// Button Link
+			//
+			document.getElementById("js-counter_button").setAttribute("href", _item.button_link);	
+		}
+    }
+	function mvccCounterGetDays(_date)
+	{
+		const _target 			= new Date(_date);
+		const _now				= new Date();
+		const _differenceMS 	= _target - _now;
+		const _differenceDays	= Math.ceil(_differenceMS / (1000 * 60 * 60 * 24));
+
+		return _differenceDays;
+	}
+	/**
+	 * Return the nearest item to the current date.
+	 */
+	function mvccCounterGetNearest(_items) 
+	{
+		//
+		// Define the current date.
+		//
+		const now = new Date(); 
+
+		//
+		// Return a single item.
+		//
+		return _items.reduce((closest, current) => {
+			//
+			// Parse the dates.
+			//
+ 			const currentStartDate = new Date(current.starts);
+			const closestStartDate = new Date(closest.starts);
+
+			//
+			// Get time differences in milliseconds
+			//
+			const currentDiff = currentStartDate - now;
+			const closestDiff = closestStartDate - now;
+			
+			//
+			// Return the closest date (future dates only)
+			//
+			if (currentDiff >= 0 && (closestDiff < 0 || currentDiff < closestDiff)) {
+				return current;
+			}
+
+			return closest;
+		});		
+
+	}
+	
+	const _closest = mvccCounterGetNearest(counterDates);
+
+	/**
+	 * Initialize
+	 */
+	mvccCounterUpdate(_closest);  
+
+</script>
